@@ -2,7 +2,7 @@
    "development": {
     "username": "root",
     "password": "sahibahmed.123",
-    "database": "Flights_Auth_DB_DEV",
+    "database": "Auth_DB_DEV",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
