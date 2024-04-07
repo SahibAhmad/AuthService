@@ -1,7 +1,8 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+const bcrypt = require('bcrypt');
+const { SALT } = require('../config/serverConfig');
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -10,9 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      // Define associations here
     }
   }
+  
   User.init({
     email: {
       type: DataTypes.STRING,
@@ -20,15 +22,13 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       validate: {
         isEmail: true,
-
       }
-
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-        validate: {
-        len: [3,300],
+      validate: {
+        len: [3, 300],
         isAlphanumeric: true,
       }
     }
@@ -36,5 +36,15 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'User',
   });
+
+  User.beforeCreate(async (user) => {
+    try {
+      const encryptedPassword = await bcrypt.hash(user.password, SALT);
+      user.password = encryptedPassword;
+    } catch (error) {
+      throw new Error('Error hashing password:', error);
+    }
+  });
+
   return User;
 };
