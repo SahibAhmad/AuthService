@@ -31,12 +31,17 @@ module.exports = (sequelize, DataTypes) => {
         len: [3, 300],
         isAlphanumeric: true,
       }
+    },
+    isVerified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     }
   }, {
     sequelize,
     modelName: 'User',
   });
 
+  //I think i should keep it as sync one only but here is the async version for learning purpose
   User.beforeCreate(async (user) => {
     try {
       const encryptedPassword = await bcrypt.hash(user.password, SALT);

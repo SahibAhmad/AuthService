@@ -27,6 +27,11 @@ module.exports = {
         isAlphanumeric: true,
       }
       },
+      isVerified: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      }
+      ,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
