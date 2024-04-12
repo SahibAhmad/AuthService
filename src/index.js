@@ -2,8 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { PORT } = require('./config/serverConfig');
 const apiRouter = require('./routes/index.js');
-// const bcrypt  = require('bcrypt');
-// const {User } = require('./models/index.js')
+const db = require('./models/index.js');
+const {User,Role} = db;
 
 const setupAndStartServer = async function () {
     try {
@@ -15,16 +15,19 @@ const setupAndStartServer = async function () {
 
         // Mount the apiRouter
         app.use('/api', apiRouter);
-
-        // const user1 = await User.findByPk(3);
-        // const user2 = await User.findByPk(2);
-        // console.log(user1.password===user2.password);
-        // const ans = bcrypt.compareSync("12abcd", user1.password); // true
-        // console.log(ans);
-
-        // Start the server
-        app.listen(PORT, () => {
+  
+        app.listen(PORT, async () => {
             console.log(`Server started at ${PORT}`);
+            if(process.env.DB_SYNC ) {
+                db.sequelize.sync({alter: true});
+            }
+            // const u1 = await User.findByPk(1);
+            // const r1 = await Role.findByPk(2);
+            // // u1.addRole(r1); 
+            // // let roles = await u1.getRoles();
+            // // console.log(roles[1]);
+            // console.log(await u1.hasRole(r1))
+
         });
     } catch (error) {
         console.error('Error setting up and starting the server:', error);
