@@ -9,4 +9,6 @@ router.post('/signIn',AuthRequestValidatorMiddleware.validateUserAuth,userContro
 
 
 router.get('/isAuthenticated', userController.isAuthenticated)
-module.exports = router 
+module.exports = router
+
+router.get('/isAdmin',AuthRequestValidatorMiddleware.isAdminValidator,userController.isAdmin);

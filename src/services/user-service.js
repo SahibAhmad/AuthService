@@ -65,6 +65,16 @@ class UserService {
             
         }
     }
+    async isAdmin(userId) {
+        try {
+            const response =  await this.userRepository.isAdmin(userId);
+            
+            return response;
+        } catch(error) {
+            console.log("some thing went wrong in service layer");
+            throw {error: "Admin Check failed"};
+        }
+    }
 
     checkPassword (userInputPlainPassword,encryptedPassword) {
 

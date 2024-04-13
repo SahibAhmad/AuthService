@@ -15,7 +15,7 @@ const signUp = async (req,res) => {
             err: {},
         });
     } catch (error) {
-        console.log(error);
+        // console.log(error.error.error.name);
         return res.status(500).json({
             data: {},
             err: error,
@@ -65,8 +65,29 @@ const isAuthenticated = async (req,res) => {
     }
 }
 
+const isAdmin = async (req,res) => {
+    try {
+        const response = await userService.isAdmin(req.body.id);
+        
+        return res.status(200).json({
+            success: true,
+            data: response,
+            message: "Successfully fetcheddd whethere user is admin or not",
+            err: {},
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            data: {},
+            message: "something went wrong",
+            err: error,
+        });
+    }
+}
+
 module.exports = {
     signUp,
     signIn,
     isAuthenticated,
+    isAdmin,
 }
