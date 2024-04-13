@@ -2,6 +2,7 @@ const {UserRepository} = require('../repository/index');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { JWT_KEY} = require('../config/serverConfig')
+const ClientError = require('../utils/error-handlers/client-error')
 class UserService {
     constructor() {
         this.userRepository = new UserRepository();
@@ -12,8 +13,12 @@ class UserService {
             const user = await this.userRepository.create(data);
             return user;
         } catch (error) {
+            if(error.name == 'SequelizeValidationError')
+            {
+                throw error;
+            }
             console.log("something went wrong at service layer");
-            throw {error};
+            throw error;
         }
     }
 
@@ -30,7 +35,10 @@ class UserService {
     async signIn(email,plainPassword) {
         try {
             const user = await this.userRepository.getByEmail(email);
-           
+            if(!user) {
+                throw new ClientError();
+            }
+            console.log(user);
             const passwordMatch = this.checkPassword(plainPassword,user.password);
             if(!passwordMatch) {
                 console.log("password didnt match ");
@@ -42,7 +50,13 @@ class UserService {
 
         } catch(error) {
             console.log("something went wrong while signing in");
-            throw {err: "Couldnt sign in"};
+            
+            if(error.name == "Attribute Not Found")
+            {
+                throw error;
+            }
+            //default throw incase we dont know what actually happened
+            throw { err: "Couldnt sign in" };
         }
     }
 

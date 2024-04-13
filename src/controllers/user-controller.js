@@ -1,4 +1,5 @@
 const {UserService} = require('../services/index');
+const {StatusCodes }  =  require('http-status-codes');
 const userService = new UserService();
 const signUp = async (req,res) => {
     try {
@@ -16,10 +17,10 @@ const signUp = async (req,res) => {
         });
     } catch (error) {
         // console.log(error.error.error.name);
-        return res.status(500).json({
+        return res.status(error.statusCode).json({
             data: {},
-            err: error,
-            message: "couldnt create user",
+            err: error.explanation,
+            message: error.message,
         });
     }
 }
@@ -37,10 +38,10 @@ const signIn = async (req,res) => {
         });
     } catch (error) {
         return res.status(500).json({
-            message: "coulndt sign in",
+            message: error.message,
             success: false,
             data: {},
-            err: {error: "signin error"}
+            err: error.explanation
         });
     }
 }

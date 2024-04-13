@@ -1,6 +1,7 @@
 const { User , Role} = require('../models/index');
 const { JWT_KEY } = require('../config/serverConfig');
-const ValidationError = require('../utils/validation-error');
+const ValidationError = require('../utils/error-handlers/validation-error');
+const ClientError = require('../utils/error-handlers/client-error')
 
 class UserRepository {
     async create(data) {
@@ -53,11 +54,17 @@ class UserRepository {
         try {
             const user = await User.findOne({where: {
                 email : emailId,
-            }})
+            }});
+            // if(!user) {
+            //     throw new ClientError();
+            // }
             return user;
         } catch (error) {
+            if(!user) {
+                throw new ClientError();
+            }
             console.log("some thing went wrong in repository layer");
-            throw { error };
+            throw  error ;
         }
     }
   
