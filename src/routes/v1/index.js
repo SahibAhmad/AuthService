@@ -12,3 +12,8 @@ router.get('/isAuthenticated', userController.isAuthenticated)
 module.exports = router
 
 router.get('/isAdmin',AuthRequestValidatorMiddleware.isAdminValidator,userController.isAdmin);
+
+// i am not sure about this one but it seems required from booking service 
+// Otherwise we need email id of user or some thing of that sort while booking
+
+router.get('/user',userController.getById);

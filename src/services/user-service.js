@@ -38,7 +38,7 @@ class UserService {
             if(!user) {
                 throw new ClientError();
             }
-            console.log(user);
+            // console.log(user);
             const passwordMatch = this.checkPassword(plainPassword,user.password);
             if(!passwordMatch) {
                 console.log("password didnt match ");
@@ -76,7 +76,19 @@ class UserService {
 
             return user.id;
         } catch (error) {
-            
+            throw {error: "Couldnt authenticate!"}
+        }
+    
+    }
+    async getById(userId) {
+        try {
+            const user = this.userRepository.getById(userId);
+            if(!user) {
+                throw {error: "no user with the corresponding token exists"};
+            }
+            return user;
+        } catch (error) {
+            throw {error: "Couldn't fetch user! "}
         }
     }
     async isAdmin(userId) {
